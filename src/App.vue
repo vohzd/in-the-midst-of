@@ -2,25 +2,32 @@
 	<main>
 			<div class="output-messages">
 				<h3>in the midst of</h3>
-				<span>Double-Click on any two squares to find the difference in date between.</span>
-				<span>You can also click/grab to swipe instead of just using the scrollbar.</span>
+				<p>double click on any two squares to find the difference in date between.</p>
+				<p>you can also click/grab to swipe instead of just using the scrollbar.</p>
 
-				<div class="currently-selected">
+				<div class="currently-selected half">
 
 					<div v-if="selectedDates.length >= 1">
-						First date is: {{ selectedDates[0] }}
+						<span class="large-text-detail">1<sup>st</sup> Date:</span>
+						<span class="med-text-detail">{{ selectedDates[0] }}</span>
 					</div>
 
 					<div v-if="selectedDates.length >= 2">
-						Second date is: {{ selectedDates[1] }}
+						<span class="large-text-detail">2<sup>nd</sup> Date:</span>
+						<span class="med-text-detail">{{ selectedDates[1] }}</span>
 					</div>
 
-					<div v-if="selectedDates.length > 0">
-						<button type="button" name="button" v-on:click="clearAllSelectedDates">Clear</button>
+					<div v-if="selectedDates.length > 0" class="button-wrapper">
+						<button type="button" name="button" v-on:click="clearAllSelectedDates" class="button-style">Clear</button>
 					</div>
 
 				</div>
+
+				<div class="output-value half" v-if="selectedDates.length == 2">
+					{{ differenceBetweenTwoSelectedDates }} days
+				</div>
 			</div>
+
 			<div class="scrollable-container dragscroll">
 				<div class="scroll-x-container">
 					<month-wrapper v-for="n in 14" v-bind:index="(n-1)" class="month-wrapper" />
@@ -33,6 +40,7 @@
 
 	import { mapGetters }                   from "vuex";
 	import $ 																from "jquery";
+	import moment 													from "moment";
 	import dragscroll                       from "dragscroll";
 
 	import Month from "./components/Month.vue";
@@ -45,7 +53,28 @@
 		computed: {
 			...mapGetters([
 				"selectedDates"
-			])
+			]),
+			differenceBetweenTwoSelectedDates(){
+				if (this.selectedDates.length === 2){
+
+					let firstChopped = this.selectedDates[0].split("-");
+
+					let firstYear = firstChopped[0];
+					let firstMonth = (Math.floor(firstChopped[1])) - 1;
+					let firstDay = Math.floor(firstChopped[2]);
+
+					let secondChopped = this.selectedDates[1].split("-");
+					let secondYear = secondChopped[0];
+					let secondMonth = (Math.floor(secondChopped[1])) - 1;
+					let secondDay = Math.floor(secondChopped[2]);
+
+					let firstDateAsMoment = moment().year(firstYear).month(firstMonth).date(firstDay);
+					let secondDateAsMoment = moment().year(secondYear).month(secondMonth).date(secondDay);
+
+					return secondDateAsMoment.diff(firstDateAsMoment, "days");
+
+				}
+			}
 		},
 		methods: {
 			clearAllSelectedDates(){
@@ -57,41 +86,6 @@
 </script>
 
 <style>
-
-::-webkit-scrollbar {
-	width: 6px;
-	height: 6px;
-}
-::-webkit-scrollbar-button {
-	width: 0px;
-	height: 0px;
-}
-::-webkit-scrollbar-thumb {
-	background: rgb(135, 140, 200);
-	border: none;
-	border-radius: 50px;
-}
-::-webkit-scrollbar-thumb:hover {
-	background: rgb(168, 174, 219);
-}
-::-webkit-scrollbar-thumb:active {
-	background: rgb(148, 159, 207);
-}
-::-webkit-scrollbar-track {
-	background: rgba(0,0,0,0.25);
-	border: 0px none #ffffff;
-	border-radius: 8px;
-
-}
-::-webkit-scrollbar-track:hover {
-	background: rgba(0,0,0,0.2);
-}
-::-webkit-scrollbar-track:rgb(104, 126, 161)active {
-	background: rgba(0,0,0,0.35);
-}
-::-webkit-scrollbar-corner {
-	background: transparent;
-}
 
 	html {
 		margin: 0;
@@ -138,6 +132,51 @@
 
 	.output-messages {
 		margin-bottom: 64px;
+		float: left;
+		height: 156px;
+		letter-spacing: 1px;
+	}
+
+	.output-messages h3 {
+		margin-bottom: 16px;
+		font-size: 24px;
+	}
+
+	.output-messages p {
+		margin-bottom: 8px;
+		font-size: 15px;
+	}
+
+	.output-value {
+		float: left;
+		position: relative;
+		font-size: 56px;
+	}
+
+	.half {
+		width: 50%;
+		float: left;
+	}
+
+	.button-wrapper {
+		margin-top: 16px;
+		float: left;
+	}
+	.button-wrapper button{
+		width: 128px;
+		padding: 8px;
+		background: rgba(141, 165, 202, 0.3);
+		outline: none;
+		border: 1px solid rgba(141, 165, 202, 0.6);
+	}
+
+	.button-wrapper button:hover{
+		cursor: pointer;
+		opacity: 0.7;
+	}
+
+	.large-text-detail {
+		font-size: 24px;
 	}
 
 
