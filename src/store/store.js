@@ -4,6 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 const state = {
+	numDays: null,
 	selectedDates: []
 };
 
@@ -16,6 +17,9 @@ const mutations = {
 	},
 	REMOVE_LAST_ID_FROM_ARRAY(state){
 		state.selectedDates.pop();
+	},
+	STORE_NUM_DAYS(state, payload){
+		state.numDays = payload;
 	}
 };
 
@@ -28,6 +32,9 @@ const actions = {
 	},
 	removeLastIdFromArray({commit}){
 		commit("REMOVE_LAST_ID_FROM_ARRAY");
+	},
+	storeNumDays({commit}, payload){
+		commit("STORE_NUM_DAYS", payload);
 	}
 	/*
 	addIdToArray({ commit, state }, payload){
@@ -45,6 +52,7 @@ const actions = {
 	*/
 };
 const getters = {
+	numDays: state => state.numDays,
 	selectedDates: state => state.selectedDates
 };
 

@@ -1,6 +1,6 @@
 <template lang="html">
 
-  <div v-on:dblclick="cellClickHandler" v-bind:class="{ 'highlighted-cell': isCellDateInArray }">
+  <div v-on:dblclick="cellClickHandler" v-bind:class="cssStyling">
         <label class="day-number-label">{{ dayNumber }}</label>
         <label class="day-text-label">{{ identifierAsShortDayLabel }}</label>
   </div>
@@ -17,8 +17,15 @@ import moment 								from "moment";
 export default {
   computed: {
     ...mapGetters([
+      "numDays",
       "selectedDates"
     ]),
+    cssStyling(){
+      return {
+        'highlighted-cell-main': this.isCellDateInArray,
+        'higlighted-cell-trail': this.isCellTrail
+      }
+    },
     identifierAsShortDayLabel(){
       let chopped = this.identifier.split("-");
       let year = chopped[0];
@@ -26,6 +33,9 @@ export default {
       let day = Math.floor(chopped[2]);
       let date = moment().year(year).month(month).date(day).format("dd");
       return date;
+    },
+    filterDate(){
+
     },
     isCellDateInArray(){
       if (this.selectedDates.length === 0) return false;
@@ -37,6 +47,10 @@ export default {
         if (result.length === 1) return true;
         else return false;
       }
+    },
+    isCellTrail(){
+      //if (selectedDates[0] == )
+      return false;
     }
   },
 	props: [
@@ -45,8 +59,12 @@ export default {
 	],
   methods: {
     cellClickHandler(){
+
       if (this.selectedDates.length === 2) this.$store.dispatch("removeLastIdFromArray");
       this.$store.dispatch("addIdToArray", this.identifier);
+
+      console.log(this.numDays);
+
     }
   }
 }
@@ -54,8 +72,12 @@ export default {
 
 <style lang="css">
 
-  .highlighted-cell {
+  .highlighted-cell-main {
     background: orange !important;
+  }
+
+  .higlighted-cell-trail {
+    background: rgba(0,0,0,0.2) !important;
   }
 
 </style>

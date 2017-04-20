@@ -52,6 +52,7 @@
 		},
 		computed: {
 			...mapGetters([
+				"numDays",
 				"selectedDates"
 			]),
 			differenceBetweenTwoSelectedDates(){
@@ -71,7 +72,11 @@
 					let firstDateAsMoment = moment().year(firstYear).month(firstMonth).date(firstDay);
 					let secondDateAsMoment = moment().year(secondYear).month(secondMonth).date(secondDay);
 
-					return secondDateAsMoment.diff(firstDateAsMoment, "days");
+					let numDays = secondDateAsMoment.diff(firstDateAsMoment, "days");
+
+					this.$store.dispatch("storeNumDays", numDays);
+
+					return numDays;
 
 				}
 			}
